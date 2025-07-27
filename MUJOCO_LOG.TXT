@@ -6874,3 +6874,21 @@ WARNING: mixed solref format, replacing with default
 Sat Jul  5 11:37:26 2025
 WARNING: mixed solref format, replacing with default
 
+Mon Jul 21 20:15:02 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 9. The simulation is unstable. Time = 819.4500.
+
+Mon Jul 21 20:15:29 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 9. The simulation is unstable. Time = 911.1000.
+
+Mon Jul 21 20:49:30 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 10.1700.
+
+Mon Jul 21 20:55:17 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 9. The simulation is unstable. Time = 8.5800.
+
+Mon Jul 21 21:29:16 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 1.7400.
+
+Sat Jul 26 14:32:11 2025
+WARNING: Nan, Inf or huge value in QACC at DOF 0. The simulation is unstable. Time = 1143.3500.
+
