@@ -8,7 +8,7 @@ model = mujoco.MjModel.from_xml_path(r"c:\mujoco-3.3.2-windows-x86_64\model\skyd
 data = mujoco.MjData(model)
 
 # Drone parameters
-mass = 1.0               # in kg
+mass = 1.325               # in kg
 g = 9.81                 # gravity
 thrust_hover = mass * g  # force to hover
 
@@ -24,14 +24,8 @@ M = np.array([
 M_inv = np.linalg.inv(M)
 
 # Control gains
-Kp_pos = np.array([5, 5, 10])
-Kd_pos = np.array([3, 3, 5])
-
-Kp_att = np.array([60, 60, 60])
-Kd_att = np.array([10, 10, 10])
-
-Kp = np.diag([50, 50, 50])
-Kd = np.diag([10, 10, 10])
+Kp = np.diag([10, 10, 10])
+Kd = np.diag([1, 1, 1])
 
 # Target state
 qpos_des = np.array([1.0, 1.0, 1.5, 1, 0, 0, 0])
@@ -56,8 +50,8 @@ def attitude_control(qpos_des, qvel_des, qpos_curr, qvel_curr, Kp, Kd):
 
     quat_err = quat_des * np.quaternion(quat_curr.w, -quat_curr.x, -quat_curr.y, -quat_curr.z)
     e_v = np.array([quat_err.x, quat_err.y, quat_err.z])
-    print("Error:", z_err)
-    return (50*z_err - 10*dz_err, -Kp@e_v.T*np.sign(quat_err.w) - Kd@(omega_des - omega_curr))
+    print("Error quat:", quat_err, "Error z:", z_err)
+    return (50*z_err + 5*dz_err + thrust_hover, -Kp@e_v.T*np.sign(quat_err.w) - Kd@(omega_des - omega_curr))
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
     while viewer.is_running():
@@ -68,14 +62,16 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # your gains (tweak for responsiveness vs. damping)
         torque_des = attitude_control(qpos_des, qvel_des, qpos_curr, qvel_curr, Kp, Kd)
         torque_des = np.array([torque_des[0], torque_des[1][0], torque_des[1][1], torque_des[1][2]])
-        data.ctrl = M_inv@torque_des
+        ctrl = M_inv@torque_des
+        ctrl[ctrl < 0] = 0
+        data.ctrl = ctrl
         print(data.ctrl)
         # wrench = np.array([2, ])
 
 
         mujoco.mj_step(model, data)
-
-        for i in range(600000):
+ 
+        for i in range(3000):
             a = 1
 
         viewer.sync()
