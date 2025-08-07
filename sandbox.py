@@ -43,12 +43,28 @@ def attitude_control(qpos_des, qvel_des, qpos_curr, qvel_curr, Kp, Kd):
     pos_curr = qpos_curr[:3]
     vel_curr = qvel_curr[:3]
     quat_curr = quaternion.from_float_array(qpos_curr[3:7])
+    quat_curr_inv = np.quaternion(quat_curr.w, -quat_curr.x, -quat_curr.y, -quat_curr.z)
     omega_curr = qvel_curr[3:6]
+
+    pos_err = pos_des - pos_curr
     
+    x_err = pos_des[0] - pos_curr[0]
+    dx_err = vel_des[0] - vel_curr[0]
+
+    y_err = pos_des[1] - pos_curr[1]
+    dy_err = vel_des[1] - vel_des[1]
+
     z_err = pos_des[2] - pos_curr[2]
     dz_err = vel_des[2] - vel_curr[2]
 
-    quat_err = quat_des * np.quaternion(quat_curr.w, -quat_curr.x, -quat_curr.y, -quat_curr.z)
+    des_ax = 10*x_err + 1*dx_err
+    des_ay = 10*y_err + 1*dy_err
+
+    thrust_vec = quat_curr * np.quaternion(0, 0, 1) * quat_curr_inv
+
+    
+
+    quat_err = quat_des * quat_curr_inv
     e_v = np.array([quat_err.x, quat_err.y, quat_err.z])
     print("Error quat:", quat_err, "Error z:", z_err)
     return (50*z_err + 5*dz_err + thrust_hover, -Kp@e_v.T*np.sign(quat_err.w) - Kd@(omega_des - omega_curr))
