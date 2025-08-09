@@ -83,8 +83,6 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         ctrl[ctrl < 0] = 0
         data.ctrl = ctrl
         print(ctrl)
-        # print(data.ctrl)
-        # wrench = np.array([2, ])
 
 
         mujoco.mj_step(model, data)

@@ -19,6 +19,9 @@ class PD_control:
         ])
         self.M_inv = np.linalg.inv(M)
 
+        self.add_sensor_noise = False
+        self.add_disturbance = False
+
         self.Kp = Kp            # 6x6 for x, y, z
         self.Kd = Kd            # 3x3 for dx, dy, dz
         self.Kp_quat = Kp_att   # 4x4 for q0, q1, q2, q3
@@ -109,10 +112,16 @@ class PD_control:
     
     def run_controller(self):
 
-        self.calc_state_err()
+        if self.add_sensor_noise == True:
+            self.current_state += (np.random.rand(13)/3)
+        
+        self.calc_state_err()         
         print(self.state_err[:3])
         self.calc_des_quat()
         self.calc_att_err()
         ctrl = self.calc_des_motor_outputs()
+
+        if self.add_disturbance == True:
+            ctrl += (np.random.rand(13)/3)
         
         return ctrl
