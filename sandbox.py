@@ -66,7 +66,7 @@ def attitude_control(qpos_des, qvel_des, qpos_curr, qvel_curr, Kp, Kd):
 
     quat_err = quat_des * quat_curr_inv
     e_v = np.array([quat_err.x, quat_err.y, quat_err.z])
-    print("Error quat:", quat_err, "Error z:", z_err)
+    # print("Error quat:", quat_err, "Error z:", z_err)
     return (50*z_err + 5*dz_err + thrust_hover, -Kp@e_v.T*np.sign(quat_err.w) - Kd@(omega_des - omega_curr))
 
 with mujoco.viewer.launch_passive(model, data) as viewer:
@@ -78,10 +78,12 @@ with mujoco.viewer.launch_passive(model, data) as viewer:
         # your gains (tweak for responsiveness vs. damping)
         torque_des = attitude_control(qpos_des, qvel_des, qpos_curr, qvel_curr, Kp, Kd)
         torque_des = np.array([torque_des[0], torque_des[1][0], torque_des[1][1], torque_des[1][2]])
+        
         ctrl = M_inv@torque_des
         ctrl[ctrl < 0] = 0
         data.ctrl = ctrl
-        print(data.ctrl)
+        print(ctrl)
+        # print(data.ctrl)
         # wrench = np.array([2, ])
 
 
