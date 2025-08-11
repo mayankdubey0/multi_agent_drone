@@ -60,9 +60,6 @@ des_state = np.array([0.24, 2, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0])
 Kp = np.diag([10, 10, 10])
 Kd = np.diag([5, 5, 5])
 
-Kp_att = np.diag([1, 1, 1])
-Kd_att = np.diag([0.1, 0.1, 0.1])
-
 Kp_att = np.diag([50, 50, 50])
 Kd_att = np.diag([5, 5, 5])
 

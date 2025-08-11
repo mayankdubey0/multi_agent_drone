@@ -116,7 +116,7 @@ class PD_control:
             self.current_state += (np.random.rand(13)/3)
         
         self.calc_state_err()         
-        print(self.state_err[:3])
+        # print(self.state_err[:3])
         self.calc_des_quat()
         self.calc_att_err()
         ctrl = self.calc_des_motor_outputs()
